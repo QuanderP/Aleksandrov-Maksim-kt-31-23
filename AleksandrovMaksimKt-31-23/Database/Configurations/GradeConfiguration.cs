@@ -1,0 +1,63 @@
+﻿using AleksandrovMaksimKt_31_23.Database.Helpers;
+using AleksandrovMaksimKt_31_23.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+
+
+
+namespace AleksandrovMaksimKt_31_23.Database.Configurations
+{
+
+    /// <summary>
+    /// Конфигурация Fluent API для сущности <see cref="Grade"/>
+    /// </summary>
+    public class GradeConfiguration : IEntityTypeConfiguration<Grade>
+    {
+
+        private const string TableName = "cd_grade";
+
+        /// <summary>
+        /// Конфигурирует маппинг оценки на таблицу БД и ее внешние ключи
+        /// </summary>
+        /// <param name="builder">Строитель конфигурации сущности</param>
+        public void Configure(EntityTypeBuilder<Grade> builder)
+        {
+            builder.ToTable(TableName);
+
+            builder.HasKey(p => p.GradeId)
+                   .HasName($"pk_{TableName}_grade_id");
+
+            builder.Property(p => p.GradeId)
+                   .ValueGeneratedOnAdd()
+                   .HasColumnName("c_grade_id")
+                   .HasComment("Идентификатор оценки");
+
+            builder.Property(p => p.Value)
+                   .IsRequired()
+                   .HasColumnName("c_grade_value")
+                   .HasColumnType(ColumnType.Int)
+                   .HasComment("Значение оценки");
+
+            // Связь 1:N со Student
+            builder.HasOne(p => p.Student)
+                   .WithMany(p => p.Grades)
+                   .HasForeignKey(p => p.StudentId)
+                   .HasConstraintName("fk_f_student_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(p => p.StudentId, $"idx_{TableName}_fk_f_student_id");
+
+            // Связь 1:N с Discipline
+            builder.HasOne(p => p.Discipline)
+                   .WithMany(p => p.Grades)
+                   .HasForeignKey(p => p.DisciplineId)
+                   .HasConstraintName("fk_f_discipline_id")
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(p => p.DisciplineId, $"idx_{TableName}_fk_f_discipline_id");
+        }
+
+    }
+
+}

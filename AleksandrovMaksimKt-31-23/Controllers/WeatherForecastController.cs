@@ -32,7 +32,6 @@ namespace WebApplication1.Controllers
             .ToArray();
         }
 
-        // ⬇️ ВСТАВЛЯЙ СЮДА ⬇️
         [HttpPost(Name = "AddNewSummary")]
         public string[] AddNewSummary(string newSummary)
         {
@@ -42,6 +41,6 @@ namespace WebApplication1.Controllers
             list.Add(newSummary);
             return list.ToArray();
         }
-        // ⬆️ ДО ЭТОЙ ЗАКРЫВАЮЩЕЙ СКОБКИ КЛАССА ⬆️
+
     }
 }
